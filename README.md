@@ -1,11 +1,11 @@
-# 🧑‍🎓 StudentApp — Fullstack Student Management Application
+# StudentApp — Fullstack Student Management Application
 
 **Tech Stack:** React (frontend) • Spring Boot (backend) • PostgreSQL (database)  
 **Infrastructure:** Vagrant + Ansible • Docker • Kubernetes (kind) • Oracle Cloud Free Tier  
 
 ---
 
-## ✨ Project Overview
+## Project Overview
 
 **StudentApp** is a fullstack CRUD application for managing student records with additional data analysis capabilities. The project demonstrates a complete DevOps lifecycle, from local development environments to cloud deployment.
 
@@ -20,7 +20,7 @@
 
 ---
 
-## 📦 Technologies Used
+## Technologies Used
 
 | Layer        | Technology                 |
 |--------------|----------------------------|
@@ -34,7 +34,7 @@
 
 ---
 
-## 🖥️ Stage 1: Virtualization with Vagrant & Ansible
+## Stage 1: Virtualization with Vagrant & Ansible
 
 Located in the `Vagrant + Ansible/` directory:
 - `Vagrantfile` – defines a local Ubuntu VM
