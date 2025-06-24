@@ -1,0 +1,104 @@
+---
+- hosts: all
+  become: true
+
+  vars:
+    backend_dir: /home/vagrant/backend
+    frontend_dir: /home/vagrant/frontend
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install system dependencies
+      apt:
+        name:
+          - openjdk-17-jdk
+          - git
+          - postgresql
+          - postgresql-contrib
+          - python3-pip
+          - python3-psycopg2
+          - curl
+        state: present
+
+    - name: Install Node.js 18 (for Vite support)
+      shell: |
+        curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+        apt-get install -y nodejs
+
+    - name: Ensure PostgreSQL is running
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Create PostgreSQL database
+      become: true
+      shell: sudo -u postgres createdb studentdb
+      args:
+        creates: /var/lib/postgresql/studentdb
+
+
+
+    - name: Install backend dependencies
+      command: ./mvnw dependency:resolve
+      args:
+        chdir: "{{ backend_dir }}"
+
+    - name: Create backend systemd service
+      copy:
+        dest: /etc/systemd/system/backend.service
+        content: |
+          [Unit]
+          Description=Spring Boot Backend Service
+          After=network.target
+
+          [Service]
+          User=vagrant
+          WorkingDirectory={{ backend_dir }}
+          ExecStart={{ backend_dir }}/mvnw spring-boot:run
+          SuccessExitStatus=143
+          TimeoutStopSec=10
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Install frontend dependencies
+      command: npm install
+      args:
+        chdir: "{{ frontend_dir }}"
+
+    - name: Create frontend systemd service
+      copy:
+        dest: /etc/systemd/system/frontend.service
+        content: |
+          [Unit]
+          Description=React Frontend Service
+          After=network.target
+
+          [Service]
+          User=vagrant
+          WorkingDirectory={{ frontend_dir }}
+          ExecStart=/usr/bin/npm run dev -- --host
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd
+      command: systemctl daemon-reload
+
+    - name: Enable and start backend
+      service:
+        name: backend
+        enabled: yes
+        state: restarted
+
+    - name: Enable and start frontend
+      service:
+        name: frontend
+        enabled: yes
+        state: restarted
