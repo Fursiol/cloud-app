@@ -9,6 +9,12 @@
 
 **StudentApp** is a fullstack CRUD application for managing student records with additional data analysis capabilities. The project demonstrates a complete DevOps lifecycle, from local development environments to cloud deployment.
 
+It includes several deployment strategies:
+- Local VM setup using **Vagrant** and **Ansible**
+- Containerization with **Docker** and **Docker Compose**
+- Orchestration with **Kubernetes** via **kind** (local cluster)
+- Deployment to the **Oracle Cloud Free Tier** VM using Docker
+
 ### 🔧 Core Features
 
 - Add / Edit / Delete student records
@@ -32,12 +38,5 @@
 | Orchestration | Kubernetes via kind       |
 | Cloud        | Oracle Cloud (Free Tier)   |
 
----
-
-## Stage 1: Virtualization with Vagrant & Ansible
-
-Located in the `Vagrant + Ansible/` directory:
-- `Vagrantfile` – defines a local Ubuntu VM
-- `playbook.yml` – automates installation of Docker, Node.js, Java, and PostgreSQL
 
 
